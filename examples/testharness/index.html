@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>epayco-go test harness</title>
+<style>
+	:root { color-scheme: light dark; }
+	body { font-family: system-ui, sans-serif; max-width: 900px; margin: 0 auto; padding: 1rem 1rem 6rem; line-height: 1.4; }
+	h1 { font-size: 1.25rem; }
+	h2 { font-size: 1.05rem; margin-top: 2rem; border-bottom: 1px solid #8888; padding-bottom: .25rem; }
+	form { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: .4rem .75rem; margin: .5rem 0 1rem; }
+	label { display: flex; flex-direction: column; font-size: .8rem; gap: .15rem; }
+	input[type=text], input[type=number] { padding: .3rem; font: inherit; }
+	.checkbox { flex-direction: row; align-items: center; gap: .4rem; }
+	.actions { grid-column: 1 / -1; }
+	button { padding: .4rem .9rem; cursor: pointer; }
+	#output-bar {
+		position: sticky; top: 0; background: Canvas; border-bottom: 2px solid #8888;
+		padding: .5rem 0; margin-bottom: 1rem; z-index: 10;
+	}
+	#output-label { font-weight: 600; }
+	#output { max-height: 40vh; overflow: auto; background: #80808022; padding: .6rem; border-radius: 4px; font-size: .8rem; }
+	.ok { color: #1a7f37; }
+	.err { color: #cf222e; }
+</style>
+</head>
+<body>
+
+<div id="output-bar">
+	<h1>epayco-go test harness (sandbox)</h1>
+	<div id="output-label">Sin llamadas todavía.</div>
+	<pre id="output">—</pre>
+</div>
+
+<p>Cada formulario llama a un método real del SDK contra el sandbox de ePayco. Los campos vacíos
+no se envían (equivalente a <code>omitempty</code>). IDs devueltos (tokens, customerId, refPayco)
+se pueden copiar de la respuesta de arriba a los siguientes formularios.</p>
+
+<h2>Webhook de confirmación</h2>
+<p>Expón este servidor con tu túnel y pon <code>&lt;tu-url-pública&gt;/webhook/confirmation</code>
+en el campo <code>urlConfirmation</code> del formulario de Charges.Create (más abajo). Cuando
+ePayco llame de vuelta, aparece aquí.</p>
+<form id="webhook-check">
+	<div class="actions"><button type="submit">Ver último webhook recibido</button></div>
+</form>
+
+<h2>Tokens</h2>
+<form class="api-form" data-endpoint="/api/token/create">
+	<label>cardNumber <input name="cardNumber" value="4575623182290326"></label>
+	<label>cardExpYear <input name="cardExpYear" value="2029"></label>
+	<label>cardExpMonth <input name="cardExpMonth" value="12"></label>
+	<label>cardCvc <input name="cardCvc" value="123"></label>
+	<div class="actions"><button>Tokens.Create</button></div>
+</form>
+
+<h2>Customers</h2>
+<form class="api-form" data-endpoint="/api/customer/create">
+	<label>docType <input name="docType" value="CC"></label>
+	<label>docNumber <input name="docNumber" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>cellPhone <input name="cellPhone" value="3010000000"></label>
+	<label>phone <input name="phone" value="3010000000"></label>
+	<label>cardTokenId <input name="cardTokenId" placeholder="del Tokens.Create de arriba"></label>
+	<label>address <input name="address"></label>
+	<label>city <input name="city"></label>
+	<label class="checkbox"><input type="checkbox" name="requireCardToken"> requireCardToken</label>
+	<div class="actions"><button>Customers.Create</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/customer/update">
+	<label>customerId <input name="customerId"></label>
+	<label>name <input name="name"></label>
+	<div class="actions"><button>Customers.Update</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/customer/get">
+	<label>customerId <input name="customerId"></label>
+	<div class="actions"><button>Customers.Get</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/customer/list">
+	<div class="actions"><button>Customers.List</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/customer/delete-token">
+	<label>franchise <input name="franchise"></label>
+	<label>mask <input name="mask"></label>
+	<label>customerId <input name="customerId"></label>
+	<div class="actions"><button>Customers.DeleteToken</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/customer/add-token">
+	<label>cardToken <input name="cardToken"></label>
+	<label>customerId <input name="customerId"></label>
+	<div class="actions"><button>Customers.AddToken</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/customer/set-default-token">
+	<label>cardToken <input name="cardToken"></label>
+	<label>customerId <input name="customerId"></label>
+	<label>franchise <input name="franchise"></label>
+	<label>mask <input name="mask"></label>
+	<div class="actions"><button>Customers.SetDefaultToken</button></div>
+</form>
+
+<h2>Charges (tarjeta de crédito)</h2>
+<form class="api-form" data-endpoint="/api/charge/create">
+	<label>value <input name="value" value="50000"></label>
+	<label>docType <input name="docType" value="CC"></label>
+	<label>docNumber <input name="docNumber" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>cellPhone <input name="cellPhone" value="3010000000"></label>
+	<label>phone <input name="phone" value="3010000000"></label>
+	<label>address <input name="address" value="Calle 1 # 2-3"></label>
+	<label>cardNumber <input name="cardNumber" value="4575623182290326"></label>
+	<label>cardExpYear <input name="cardExpYear" value="2029"></label>
+	<label>cardExpMonth <input name="cardExpMonth" value="12"></label>
+	<label>cardCvc <input name="cardCvc" value="123"></label>
+	<label>dues <input name="dues" value="1"></label>
+	<label>cardTokenId <input name="cardTokenId" placeholder="alternativa a los datos de tarjeta"></label>
+	<label>customerId <input name="customerId"></label>
+	<label>description <input name="description"></label>
+	<label>invoice <input name="invoice"></label>
+	<label>urlConfirmation <input name="urlConfirmation" placeholder="https://tu-tunel.example.com/webhook/confirmation"></label>
+	<div class="actions"><button>Charges.Create</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/charge/get">
+	<label>referencePayco <input name="referencePayco" placeholder="refPayco de Charges.Create"></label>
+	<div class="actions"><button>Charges.Get</button></div>
+</form>
+
+<h2>PSE</h2>
+<form class="api-form" data-endpoint="/api/pse/create">
+	<label>bank <input name="bank" value="1077"></label>
+	<label>value <input name="value" value="10000"></label>
+	<label>docType <input name="docType" value="CC"></label>
+	<label>docNumber <input name="docNumber" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>cellPhone <input name="cellPhone" value="3010000000"></label>
+	<label>ip <input name="ip" value="190.0.0.0"></label>
+	<label>urlResponse <input name="urlResponse"></label>
+	<label>urlConfirmation <input name="urlConfirmation"></label>
+	<div class="actions"><button>PSE.Create</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/pse/confirm">
+	<label>transactionID <input type="number" name="transactionID" placeholder="de PSE.Create"></label>
+	<div class="actions"><button>PSE.Confirm</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/pse/banks">
+	<div class="actions"><button>PSE.ListBanks</button></div>
+</form>
+
+<h2>Cash (Efecty y similares)</h2>
+<form class="api-form" data-endpoint="/api/cash/create">
+	<label>value <input name="value" value="20000"></label>
+	<label>description <input name="description" value="pay test"></label>
+	<label>docType <input name="docType" value="CC"></label>
+	<label>docNumber <input name="docNumber" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>cellPhone <input name="cellPhone" value="3010000000"></label>
+	<label>ip <input name="ip" value="190.0.0.0"></label>
+	<label>paymentMethod <input name="paymentMethod" value="EF" placeholder="ver Cash.ListEntities"></label>
+	<div class="actions"><button>Cash.Create</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/cash/entities">
+	<div class="actions"><button>Cash.ListEntities</button></div>
+</form>
+
+<h2>Daviplata</h2>
+<form class="api-form" data-endpoint="/api/daviplata/create">
+	<label>docType <input name="docType" value="CC"></label>
+	<label>document <input name="document" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>indCountry <input name="indCountry" value="CO"></label>
+	<label>phone <input name="phone" value="3010000000"></label>
+	<label>country <input name="country" value="CO"></label>
+	<label>city <input name="city" value="Bogota"></label>
+	<label>address <input name="address" value="Calle 1 # 2-3"></label>
+	<label>ip <input name="ip" value="190.0.0.0"></label>
+	<label>value <input name="value" value="100"></label>
+	<div class="actions"><button>Daviplata.Create</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/daviplata/confirm">
+	<label>refPayco <input name="refPayco" placeholder="de Daviplata.Create"></label>
+	<label>idSessionToken <input name="idSessionToken"></label>
+	<label>otp <input name="otp"></label>
+	<div class="actions"><button>Daviplata.Confirm</button></div>
+</form>
+
+<h2>Safetypay</h2>
+<form class="api-form" data-endpoint="/api/safetypay/create">
+	<label>cash <input name="cash" value="1"></label>
+	<label>expirationDate <input name="expirationDate" value="2029-12-31"></label>
+	<label>docType <input name="docType" value="CC"></label>
+	<label>document <input name="document" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>indCountry <input name="indCountry" value="57"></label>
+	<label>phone <input name="phone" value="3010000000"></label>
+	<label>country <input name="country" value="CO"></label>
+	<label>ip <input name="ip" value="190.0.0.0"></label>
+	<label>value <input name="value" value="100000"></label>
+	<div class="actions"><button>Safetypay.Create</button></div>
+</form>
+
+<h2>Checkout estándar</h2>
+<form class="api-form" data-endpoint="/api/standard/create">
+	<label>channel <input name="channel" value="RDP"></label>
+	<label>value <input name="value" value="50000"></label>
+	<label>docType <input name="docType" value="CC"></label>
+	<label>docNumber <input name="docNumber" value="1234567890"></label>
+	<label>name <input name="name" value="Juan"></label>
+	<label>lastName <input name="lastName" value="Perez"></label>
+	<label>email <input name="email" value="juan.perez@example.com"></label>
+	<label>cellPhone <input name="cellPhone" value="3010000000"></label>
+	<label>ip <input name="ip" value="190.0.0.0"></label>
+	<label>city <input name="city"></label>
+	<label>address <input name="address"></label>
+	<div class="actions"><button>Standard.Create</button></div>
+</form>
+
+<form class="api-form" data-endpoint="/api/standard/confirm">
+	<label>channel <input name="channel" value="RDP"></label>
+	<label>value <input name="value" value="50000"></label>
+	<label>refEpayco <input name="refEpayco" placeholder="de Standard.Create"></label>
+	<label>currentStatusTransaction <input name="currentStatusTransaction" value="Pendiente"></label>
+	<label>statusTransaction <input name="statusTransaction" value="Aceptada"></label>
+	<label>authorizationCode <input name="authorizationCode" value="123456"></label>
+	<div class="actions"><button>Standard.Confirm</button></div>
+</form>
+
+<script>
+function formToJSON(form) {
+	const obj = {};
+	for (const el of form.elements) {
+		if (!el.name) continue;
+		if (el.type === 'checkbox') obj[el.name] = el.checked;
+		else if (el.type === 'number') { if (el.value !== '') obj[el.name] = Number(el.value); }
+		else if (el.value !== '') obj[el.name] = el.value;
+	}
+	return obj;
+}
+
+const outputLabel = document.getElementById('output-label');
+const output = document.getElementById('output');
+
+document.body.addEventListener('submit', async (ev) => {
+	const form = ev.target;
+	if (!form.classList.contains('api-form')) return;
+	ev.preventDefault();
+
+	const endpoint = form.dataset.endpoint;
+	outputLabel.textContent = 'Llamando ' + endpoint + ' ...';
+	outputLabel.className = '';
+	output.textContent = '—';
+
+	try {
+		const res = await fetch(endpoint, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(formToJSON(form)),
+		});
+		const body = await res.json();
+		outputLabel.textContent = endpoint + ' -> ' + (body.ok ? 'OK' : 'ERROR');
+		outputLabel.className = body.ok ? 'ok' : 'err';
+		output.textContent = JSON.stringify(body, null, 2);
+	} catch (err) {
+		outputLabel.textContent = endpoint + ' -> ERROR DE RED';
+		outputLabel.className = 'err';
+		output.textContent = String(err);
+	}
+});
+
+document.getElementById('webhook-check').addEventListener('submit', async (ev) => {
+	ev.preventDefault();
+	const res = await fetch('/webhook/last');
+	const body = await res.json();
+	if (body.data === null) {
+		outputLabel.textContent = '/webhook/last -> sin webhooks recibidos todavía';
+		outputLabel.className = '';
+	} else {
+		outputLabel.textContent = '/webhook/last -> firma válida: ' + body.data.signatureValid;
+		outputLabel.className = body.data.signatureValid ? 'ok' : 'err';
+	}
+	output.textContent = JSON.stringify(body, null, 2);
+});
+</script>
+</body>
+</html>
