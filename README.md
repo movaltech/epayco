@@ -1,5 +1,9 @@
 # epayco-go
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/diegofxm/epayco-go.svg)](https://pkg.go.dev/github.com/diegofxm/epayco-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/diegofxm/epayco-go)](https://goreportcard.com/report/github.com/diegofxm/epayco-go)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A professional, dependency-free Go SDK for the [ePayco](https://epayco.com) payment API.
 
 ```go
