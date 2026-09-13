@@ -1,9 +1,12 @@
 # epayco-go
 
+[![CI](https://github.com/diegofxm/epayco-go/actions/workflows/ci.yml/badge.svg)](https://github.com/diegofxm/epayco-go/actions/workflows/ci.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/diegofxm/epayco-go.svg)](https://pkg.go.dev/github.com/diegofxm/epayco-go)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A professional, dependency-free Go SDK for the [ePayco](https://epayco.com) payment API.
+
+## Installation
 
 ```go
 go get github.com/diegofxm/epayco-go
@@ -45,10 +48,10 @@ instead of hiding it:
 | `Charges`, `Tokens`, `Customers`, `PSE`, `Cash`, `Daviplata`, `Safetypay`, `Standard` | `apify.epayco.co` | Charging, tokenizing cards, managing customers, PSE, cash, Daviplata, Safetypay, standard checkout, transaction lookup — everything ePayco documents as the current way to integrate (`docs.epayco.com/docs/api`). |
 | `Plans`, `Subscriptions` | `api.secure.payco.co` | Recurring billing. ePayco's own docs (`docs.epayco.com/docs/planes`) don't publish a REST contract for this and point integrators to the official SDKs instead — this is that contract, ported to Go. |
 
-Both flows authenticate automatically and transparently; you never call login yourself. See
-[`docs/epayco-go-architecture.md`](../docs/epayco-go-architecture.md) in the parent repository
-for the full rationale, including how this was corroborated against ePayco's production Postman
-collection and confirmed live against the sandbox API.
+Both flows authenticate automatically and transparently; you never call login yourself. This
+split was corroborated directly against ePayco's production Postman collection and confirmed
+live against the sandbox API — it isn't a guess at their internal architecture, it's what their
+own API actually does.
 
 ## Resources
 
@@ -144,3 +147,22 @@ EPAYCO_PUBLIC_KEY=... EPAYCO_PRIVATE_KEY=... go test -tags integration -run Test
 ## Requirements
 
 Go 1.26.4+. No external dependencies — only the standard library.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a PR, make sure `go vet ./...`, `gofmt -l .`
+and `go test -race ./...` are clean — CI enforces the same checks.
+
+## Support
+
+This is an independent, community-maintained SDK and is not officially affiliated with ePayco.
+For issues with the SDK itself, please [open an issue](https://github.com/diegofxm/epayco-go/issues).
+For account or payment-processing questions, contact [ePayco support](https://epayco.com) directly.
+
+## License
+
+[MIT](LICENSE)
