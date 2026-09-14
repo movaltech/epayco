@@ -1,7 +1,7 @@
-# epayco-go
+# epayco
 
-[![CI](https://github.com/diegofxm/epayco-go/actions/workflows/ci.yml/badge.svg)](https://github.com/diegofxm/epayco-go/actions/workflows/ci.yml)
-[![Go Reference](https://pkg.go.dev/badge/github.com/diegofxm/epayco-go.svg)](https://pkg.go.dev/github.com/diegofxm/epayco-go)
+[![CI](https://github.com/movaltech/epayco/actions/workflows/ci.yml/badge.svg)](https://github.com/movaltech/epayco/actions/workflows/ci.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/movaltech/epayco.svg)](https://pkg.go.dev/github.com/movaltech/epayco)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A professional, dependency-free Go SDK for the [ePayco](https://epayco.com) payment API.
@@ -9,7 +9,7 @@ A professional, dependency-free Go SDK for the [ePayco](https://epayco.com) paym
 ## Installation
 
 ```go
-go get github.com/diegofxm/epayco-go
+go get github.com/movaltech/epayco
 ```
 
 ## Quick start
@@ -160,7 +160,7 @@ and `go test -race ./...` are clean — CI enforces the same checks.
 ## Support
 
 This is an independent, community-maintained SDK and is not officially affiliated with ePayco.
-For issues with the SDK itself, please [open an issue](https://github.com/diegofxm/epayco-go/issues).
+For issues with the SDK itself, please [open an issue](https://github.com/movaltech/epayco/issues).
 For account or payment-processing questions, contact [ePayco support](https://epayco.com) directly.
 
 ## License

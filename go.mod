@@ -1,4 +1,3 @@
-// Deprecated: this module has moved to github.com/movaltech/epayco.
-module github.com/diegofxm/epayco-go
+module github.com/movaltech/epayco
 
 go 1.26.4

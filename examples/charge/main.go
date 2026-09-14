@@ -1,5 +1,5 @@
 // Command charge is a minimal, runnable example of the most common
-// github.com/diegofxm/epayco-go operations: tokenize a card, charge it, look
+// github.com/movaltech/epayco operations: tokenize a card, charge it, look
 // the transaction up by reference, and verify a confirmation webhook.
 //
 // Run it against ePayco's sandbox with:
@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	epayco "github.com/diegofxm/epayco-go"
+	epayco "github.com/movaltech/epayco"
 )
 
 func main() {

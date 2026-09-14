@@ -1,5 +1,5 @@
 // Command testharness is a throwaway browser-based test bench for
-// github.com/diegofxm/epayco-go: a tiny Go server wraps every apify resource
+// github.com/movaltech/epayco: a tiny Go server wraps every apify resource
 // method behind a JSON route, and a single static page (index.html) offers a
 // form per method so you can exercise the real ePayco sandbox by hand and
 // see the raw response — no separate backend project, no JS framework.
@@ -24,7 +24,7 @@ import (
 	"os"
 	"sync"
 
-	epayco "github.com/diegofxm/epayco-go"
+	epayco "github.com/movaltech/epayco"
 )
 
 //go:embed index.html

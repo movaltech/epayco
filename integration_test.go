@@ -18,7 +18,7 @@ import (
 	"testing"
 	"time"
 
-	epayco "github.com/diegofxm/epayco-go"
+	epayco "github.com/movaltech/epayco"
 )
 
 func liveClient(t *testing.T) *epayco.Client {
